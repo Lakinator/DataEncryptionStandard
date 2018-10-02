@@ -21,7 +21,7 @@ public class Key {
     private int[][] bits;
 
 
-    public Key(int[] key) throws IllegalArgumentException {
+    public Key(final int[] key) throws IllegalArgumentException {
         if (!verifyKey(key)) return;
 
         currentRound = 0;
@@ -31,6 +31,12 @@ public class Key {
     }
 
 
+    /**
+     * Calculates one subkey due to the {@link Key#currentRound}.
+     * Every subkey depends on the last round that has been calculated.
+     *
+     * @return - The subkey
+     */
     public int[] getNextKey() {
         currentRound++;
         for (int[] bit : bits) {
@@ -39,7 +45,15 @@ public class Key {
         return PC2();
     }
 
-    private void PC1(int[] input) {
+    /**
+     * This "Permuted-Choice" method divides the input bit array while also leaving out
+     * the "Parity-Bits" every 8th bit.
+     * The result is stored in {@link Key#bits}.
+     * Uses {@link Key#permutedArray_PC1} which contains {@link Key#permutedLeft_PC1} and {@link Key#permutedRight_PC1}.
+     *
+     * @param input - The bit arry that will be permuted
+     */
+    private void PC1(final int[] input) {
         //Init
         bits = new int[2][];
         for (int i = 0; i < bits.length; i++) bits[i] = new int[28];
@@ -52,6 +66,13 @@ public class Key {
         }
     }
 
+    /**
+     * This "Permuted-Choice" method merges and cuts down the two
+     * bit arrays in {@link Key#bits} to a 48 bit array.
+     * Uses {@link Key#permuted_PC2}.
+     *
+     * @return - The merged and cut down bit array
+     */
     private int[] PC2() {
         int[] retVal = new int[48];
 
@@ -63,6 +84,12 @@ public class Key {
         return retVal;
     }
 
+    /**
+     * Calulates the number of shifts that have to be made due to the {@link Key#currentRound}.
+     * This depends on {@link Key#shifts}.
+     *
+     * @return - Number of shifts
+     */
     private int getShifts() {
         for (int i = 0; i < shifts.length; i++) {
             for (int j = 0; j < shifts[i].length; j++) {
@@ -72,15 +99,29 @@ public class Key {
         return 0;
     }
 
-    private void circularLeftShift(int[] bits, int k) {
+    /**
+     * Left shifts a bit <code>n</code> times (circular).
+     *
+     * @param bits - The bit array that will be shifted
+     * @param n    - The number of times the bit array should be shifted
+     */
+    private void circularLeftShift(int[] bits, int n) {
         int temp = bits[0];
-        for (int i = 0; i < k; i++) {
+        for (int i = 0; i < n; i++) {
             System.arraycopy(bits, 1, bits, 0, bits.length - 1);
             bits[bits.length - 1] = temp;
         }
     }
 
-    private boolean verifyKey(int[] key) throws IllegalArgumentException {
+    /**
+     * Checks the given bit key array for "Parity-Bits" which means that
+     * every 8th bit should be the cross sum of the previous 7 bits modulo 2.
+     *
+     * @param key - The bit array that will be verified
+     * @return - True if the given bit array is a proper key
+     * @throws IllegalArgumentException - Key has to be exactly 64 indices long | Wrong "Parity-Bit"
+     */
+    private boolean verifyKey(final int[] key) throws IllegalArgumentException {
         if (key.length != 64) throw new IllegalArgumentException("Key has to be exactly 64 indices long!");
 
         for (int i = 1; i < 9; i++) {
@@ -101,6 +142,11 @@ public class Key {
         return true;
     }
 
+    /**
+     * Getter for {@link Key#currentRound}.
+     *
+     * @return - The current round
+     */
     public int getCurrentRound() {
         return currentRound;
     }

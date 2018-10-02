@@ -57,8 +57,17 @@ public class SBoxes {
             }
     };
 
-    public static int[] encrypt(final int[] inputBits) {
-        if (inputBits.length != 48) throw new IllegalArgumentException("Input bit array has to be exactly 48 indices long!");
+    /**
+     * Encrypts a bit array with a length of 48 that is divided into 8 pieces with the length 6 and
+     * is mapped into a new bit array due to these {@link SBoxes#sboxes}.
+     *
+     * @param inputBits - The bit array that will be encrypted
+     * @return - The mapped bit array
+     * @throws IllegalArgumentException - Input bit array has to be exactly 48 indices long
+     */
+    public static int[] encrypt(final int[] inputBits) throws IllegalArgumentException {
+        if (inputBits.length != 48)
+            throw new IllegalArgumentException("Input bit array has to be exactly 48 indices long!");
 
         int[] result = new int[32];
         int[] finalBits = new int[4];
@@ -66,8 +75,8 @@ public class SBoxes {
         int row, col;
 
         for (int i = 0; i < sboxes.length; i++) {
-            row = Bits.bits_to_decimal(new int[] { inputBits[(i * 6)], inputBits[5 + (i * 6)] });
-            col = Bits.bits_to_decimal(new int[] { inputBits[1 + (i * 6)], inputBits[2 + (i * 6)], inputBits[3 + (i * 6)], inputBits[4 + (i * 6)] });
+            row = Bits.bits_to_decimal(new int[]{inputBits[(i * 6)], inputBits[5 + (i * 6)]});
+            col = Bits.bits_to_decimal(new int[]{inputBits[1 + (i * 6)], inputBits[2 + (i * 6)], inputBits[3 + (i * 6)], inputBits[4 + (i * 6)]});
 
             finalBits = Bits.decimal_to_bits(sboxes[i][row][col], finalBits.length);
             System.arraycopy(finalBits, 0, result, (i * 4), finalBits.length);

@@ -35,6 +35,7 @@ public class Main {
         };
 
         Key key = new Key(keyArr);
+        key.generateSubkeys(16);
 
         //Encrypt
         DES des = new DES();

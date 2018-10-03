@@ -17,19 +17,34 @@ public class Key {
             {3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15} /* 2 shifts */
     };
 
-    private int currentRound;
+    private int currentRound, maxRound;
     private int[][] bits;
+    private int[][] subkeys;
 
 
     public Key(final int[] key) throws IllegalArgumentException {
         if (!verifyKey(key)) return;
 
+        maxRound = -1;
         currentRound = 0;
 
         //Permutation
         PC1(key);
     }
 
+    /**
+     * This method generates all subkeys until the {@link #maxRound} is reached.
+     *
+     * @param maxRound - Round limiter
+     */
+    public void generateSubkeys(int maxRound) {
+        this.maxRound = maxRound;
+        subkeys = new int[this.maxRound][48];
+
+        for (int i = 0; i < this.maxRound; i++) {
+            subkeys[i] = getNextKey();
+        }
+    }
 
     /**
      * Calculates one subkey due to the {@link Key#currentRound}.
@@ -37,7 +52,7 @@ public class Key {
      *
      * @return - The subkey
      */
-    public int[] getNextKey() {
+    private int[] getNextKey() {
         currentRound++;
         for (int[] bit : bits) {
             circularLeftShift(bit, getShifts());
@@ -143,12 +158,15 @@ public class Key {
     }
 
     /**
-     * Getter for {@link Key#currentRound}.
+     * Returns a copy from the subkey of the specified round.
      *
-     * @return - The current round
+     * @param round - The round from which the subkey should be (starting with 1)
+     * @return - The subkey
+     * @throws IndexOutOfBoundsException - Subkey round does not exist
      */
-    public int getCurrentRound() {
-        return currentRound;
+    public int[] getSubkey(int round) throws IndexOutOfBoundsException {
+        if (round < 1 || round > maxRound)
+            throw new IndexOutOfBoundsException("Subkey round " + round + " does not exist!");
+        return subkeys[round - 1].clone();
     }
-
 }

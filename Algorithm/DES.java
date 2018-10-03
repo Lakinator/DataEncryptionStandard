@@ -46,7 +46,7 @@ public class DES {
 
             //F-Function
             temp = Expansion.expand(rightOld);
-            temp = Bits.xor(temp, key.getNextKey());
+            temp = Bits.xor(temp, key.getSubkey(i+1));
             temp = SBoxes.encrypt(temp);
             temp = Permutation.permute(temp);
 

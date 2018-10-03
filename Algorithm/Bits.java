@@ -13,54 +13,74 @@ public class Bits {
     /**
      * Transforms a decimal into a bit array.
      *
-     * @param dec_number - The number that will be transformed
-     * @param minLen     - The minimum length of the desired bit array, 0's are added to reach the minimum length
-     * @return - The bit array
-     */
-    public static int[] decimal_to_bits(int dec_number, int minLen) {
-        ArrayList<Integer> resultList = new ArrayList<>();
-        int[] resultArray;
-
-        while (dec_number > 0) {
-            resultList.add(dec_number % 2);
-            dec_number /= 2;
-        }
-
-        while (resultList.size() < minLen) {
-            resultList.add(0);
-        }
-
-        Collections.reverse(resultList);
-
-        resultArray = new int[resultList.size()];
-        for (int i = 0; i < resultArray.length; i++) {
-            resultArray[i] = resultList.get(i);
-        }
-
-        return resultArray;
-    }
-
-    /**
-     * Transforms BigInteger into a bit array.
-     *
-     * @param hex    - Hex value that will be transformed
+     * @param dec    - Decimal that will be transformed
      * @param minLen - The minimum length of the desired bit array, 0's are added to reach the minimum length
      * @return - The bit array
      */
-    public static int[] hex_to_bits(BigInteger hex, int minLen) {
+    public static int[] toBits(int dec, int minLen) {
         ArrayList<Integer> resultList = new ArrayList<>();
-        int[] resultArray;
+
+        while (dec > 0) {
+            resultList.add(dec % 2);
+            dec /= 2;
+        }
+
+        return finalizedArray(resultList, minLen, true);
+    }
+
+    /**
+     * Transforms a decimal into a bit array.
+     *
+     * @param hex    - Hex number that will be transformed
+     * @param minLen - The minimum length of the desired bit array, 0's are added to reach the minimum length
+     * @return - The bit array
+     */
+    public static int[] toBits(BigInteger hex, int minLen) {
+        ArrayList<Integer> resultList = new ArrayList<>();
 
         while (hex.compareTo(new BigInteger("0", 10)) > 0) {
             resultList.add(hex.mod(new BigInteger("2", 10)).intValue());
             hex = hex.divide(new BigInteger("2", 10));
         }
 
+        return finalizedArray(resultList, minLen, true);
+    }
+
+    /**
+     * Transforms a string into a bit array.
+     *
+     * @param str    - String that will be transformed
+     * @param minLen - The minimum length of the desired bit array, 0's are added to reach the minimum length
+     * @return - The bit array
+     */
+    public static int[] toBits(String str, int minLen) {
+        ArrayList<Integer> resultList = new ArrayList<>();
+
+        for (char c : str.toCharArray()) {
+            for (int i : toBits(c, 8)) {
+                resultList.add(i);
+            }
+        }
+
+        return finalizedArray(resultList, minLen, false);
+    }
+
+    /**
+     * This method turns an ArrayList from any toBits method into a
+     * static finalized array to avoid duplicate code.
+     *
+     * @param resultList - List containing bits
+     * @param minLen     - The minimum length of the desired bit array, 0's are added to reach the minimum length
+     * @param reverse    -  Determines if the finalized array will be reversed or not
+     * @return - The bit array
+     */
+    private static int[] finalizedArray(ArrayList<Integer> resultList, int minLen, boolean reverse) {
+        int[] resultArray;
         while (resultList.size() < minLen) {
             resultList.add(0);
         }
 
-        Collections.reverse(resultList);
+        if (reverse) Collections.reverse(resultList);
 
         resultArray = new int[resultList.size()];
         for (int i = 0; i < resultArray.length; i++) {
@@ -77,7 +97,7 @@ public class Bits {
      * @return - The decimal
      * @throws IllegalArgumentException - Bit array may not contain any other values than 0 or 1
      */
-    public static int bits_to_decimal(final int[] bits) throws IllegalArgumentException {
+    public static int toDecimal(final int[] bits) throws IllegalArgumentException {
         int result = 0;
         for (int i = bits.length - 1; i >= 0; i--) {
             if (bits[i] != 0 && bits[i] != 1)
@@ -85,6 +105,26 @@ public class Bits {
             result += bits[i] * ((int) Math.pow(2, (bits.length - 1) - i));
         }
         return result;
+    }
+
+    /**
+     * Transforms a bit array into a string.
+     *
+     * @param bits - The bit array that will be transformed
+     * @return - The decimal
+     */
+    public static String toString(final int[] bits) throws IllegalArgumentException {
+        if (bits.length % 8 != 0) throw new IllegalArgumentException("Invalid bit array!");
+
+        StringBuilder sb = new StringBuilder();
+        int[] temp = new int[8];
+
+        for (int i = 0; i < bits.length / 8; i++) {
+            System.arraycopy(bits, i * 8, temp, 0, 8);
+            sb.append((char) toDecimal(temp));
+        }
+
+        return sb.toString();
     }
 
     /**

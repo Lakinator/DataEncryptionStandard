@@ -23,6 +23,11 @@ public class DES {
 
     }
 
+    private int[][] splitData(int[] data) {
+
+        return null;
+    }
+
     public int[] run(int[] block, Key key) {
         int[][] parts = new int[2][32]; //left and right
 
@@ -58,4 +63,5 @@ public class DES {
 
         return Permutation.init_permute_inversed(retVal);
     }
+
 }

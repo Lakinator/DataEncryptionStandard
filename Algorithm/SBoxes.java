@@ -75,10 +75,10 @@ public class SBoxes {
         int row, col;
 
         for (int i = 0; i < sboxes.length; i++) {
-            row = Bits.bits_to_decimal(new int[]{inputBits[(i * 6)], inputBits[5 + (i * 6)]});
-            col = Bits.bits_to_decimal(new int[]{inputBits[1 + (i * 6)], inputBits[2 + (i * 6)], inputBits[3 + (i * 6)], inputBits[4 + (i * 6)]});
+            row = Bits.toDecimal(new int[]{inputBits[(i * 6)], inputBits[5 + (i * 6)]});
+            col = Bits.toDecimal(new int[]{inputBits[1 + (i * 6)], inputBits[2 + (i * 6)], inputBits[3 + (i * 6)], inputBits[4 + (i * 6)]});
 
-            finalBits = Bits.decimal_to_bits(sboxes[i][row][col], finalBits.length);
+            finalBits = Bits.toBits(sboxes[i][row][col], finalBits.length);
             System.arraycopy(finalBits, 0, result, (i * 4), finalBits.length);
         }
 

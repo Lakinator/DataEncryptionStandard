@@ -1,5 +1,6 @@
 package Algorithm;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -23,6 +24,36 @@ public class Bits {
         while (dec_number > 0) {
             resultList.add(dec_number % 2);
             dec_number /= 2;
+        }
+
+        while (resultList.size() < minLen) {
+            resultList.add(0);
+        }
+
+        Collections.reverse(resultList);
+
+        resultArray = new int[resultList.size()];
+        for (int i = 0; i < resultArray.length; i++) {
+            resultArray[i] = resultList.get(i);
+        }
+
+        return resultArray;
+    }
+
+    /**
+     * Transforms BigInteger into a bit array.
+     *
+     * @param hex    - Hex value that will be transformed
+     * @param minLen - The minimum length of the desired bit array, 0's are added to reach the minimum length
+     * @return - The bit array
+     */
+    public static int[] hex_to_bits(BigInteger hex, int minLen) {
+        ArrayList<Integer> resultList = new ArrayList<>();
+        int[] resultArray;
+
+        while (hex.compareTo(new BigInteger("0", 10)) > 0) {
+            resultList.add(hex.mod(new BigInteger("2", 10)).intValue());
+            hex = hex.divide(new BigInteger("2", 10));
         }
 
         while (resultList.size() < minLen) {

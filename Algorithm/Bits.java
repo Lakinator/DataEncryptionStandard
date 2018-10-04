@@ -122,6 +122,8 @@ public class Bits {
         for (int i = 0; i < bits.length / 8; i++) {
             System.arraycopy(bits, i * 8, temp, 0, 8);
             sb.append((char) toDecimal(temp));
+            //TODO Maybe remove this => Experimental: Every ASCII = 0 will be removed
+            if (sb.indexOf("" + (char) 0) > -1) sb.deleteCharAt(sb.indexOf("" + (char) 0));
         }
 
         return sb.toString();

@@ -1,6 +1,6 @@
-import Algorithm.Bits;
 import Algorithm.DES;
 import Algorithm.Key;
+import Algorithm.Message;
 
 import java.util.Arrays;
 
@@ -10,18 +10,6 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-
-        int[] data = new int[]{
-                0, 0, 0, 0, 0, 0, 0, 1,
-                0, 0, 1, 0, 0, 0, 1, 1,
-                0, 1, 0, 0, 0, 1, 0, 1,
-                0, 1, 1, 0, 0, 1, 1, 1,
-                1, 0, 0, 0, 1, 0, 0, 1,
-                1, 0, 1, 0, 1, 0, 1, 1,
-                1, 1, 0, 0, 1, 1, 0, 1,
-                1, 1, 1, 0, 1, 1, 1, 1
-        };
-
 
         int[] keyArr = new int[]{
                 0, 1, 1, 0, 1, 1, 0, 1,
@@ -34,15 +22,19 @@ public class Main {
                 0, 0, 1, 1, 0, 0, 1, 0
         };
 
+        Message msg = new Message("Hallo Welt");
+
         Key key = new Key(keyArr);
-        key.generateSubkeys(16);
 
         //Encrypt
         DES des = new DES();
-        int[] encrypted = des.run(data, key);
-        System.out.println(Arrays.toString(encrypted));
+        Message enc = des.encrypt(msg, key);
+        System.out.println(enc.toString());
+        System.out.println(Arrays.toString(enc.getData()));
 
-        System.out.println(Arrays.toString(Bits.toBits("Hallo", 64)));
-        System.out.println(Bits.toString(new int[]{0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        //Decrypt
+        Message dec = des.decrypt(enc, key);
+        System.out.println(dec.toString());
+        System.out.println(Arrays.toString(dec.getData()));
     }
 }

@@ -56,7 +56,7 @@ public class Key {
      * @param maxRound - Round limiter
      */
     public void generateSubkeys(int maxRound) {
-        if (maxRound <= 0) return;
+        if (maxRound <= 0 || this.maxRound == maxRound) return;
 
         this.maxRound = maxRound;
         subkeys = new int[this.maxRound][48];

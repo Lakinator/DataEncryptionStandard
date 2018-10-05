@@ -46,7 +46,7 @@ public class Permutation {
      * @return - The permuted bit array
      * @throws IllegalArgumentException - Bit array has to be exactly 32 indices long
      */
-    public static int[] permute(final int[] bits) throws IllegalArgumentException {
+    public static int[] P(final int[] bits) throws IllegalArgumentException {
         if (bits.length != 32) throw new IllegalArgumentException("Bit array has to be exactly 32 indices long!");
 
         int[] retVal = new int[32];
@@ -65,7 +65,7 @@ public class Permutation {
      * @return - The permuted bit array
      * @throws IllegalArgumentException - Bit array has to be exactly 32 indices long
      */
-    public static int[] init_permute(final int[] bits) throws IllegalArgumentException {
+    public static int[] IP(final int[] bits) throws IllegalArgumentException {
         if (bits.length != 64) throw new IllegalArgumentException("Bit array has to be exactly 64 indices long!");
 
         int[] retVal = new int[64];
@@ -79,13 +79,13 @@ public class Permutation {
 
     /**
      * Permutes a bit array using the {@link Permutation#initial_permutation_inversed} table.
-     * The inverse of {@link Permutation#init_permute(int[])}.
+     * The inverse of {@link Permutation#IP(int[])}.
      *
      * @param bits - The bit array that will be permuted
      * @return - The permuted bit array
      * @throws IllegalArgumentException - Bit array has to be exactly 32 indices long
      */
-    public static int[] init_permute_inversed(final int[] bits) throws IllegalArgumentException {
+    public static int[] IP_Inversed(final int[] bits) throws IllegalArgumentException {
         if (bits.length != 64) throw new IllegalArgumentException("Bit array has to be exactly 64 indices long!");
 
         int[] retVal = new int[64];

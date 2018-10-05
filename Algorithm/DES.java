@@ -1,6 +1,5 @@
 package Algorithm;
 
-
 /**
  * 09.03.2018 | created by Lukas S
  */
@@ -74,7 +73,7 @@ public class DES {
         int[][] parts = new int[2][32]; //left and right
 
         //Init
-        block = Permutation.init_permute(block);
+        block = Permutation.IP(block);
 
         System.arraycopy(block, 0, parts[0], 0, 32); //left
         System.arraycopy(block, 32, parts[1], 0, 32); //right
@@ -85,16 +84,9 @@ public class DES {
         for (int i = 0; i < 16; i++) {
             rightOld = parts[1];
 
-            //F-Function
-            parts[1] = Expansion.expand(parts[1]);
-            if (encrypt) parts[1] = Bits.xor(parts[1], key.getSubkey(i + 1));
-            else parts[1] = Bits.xor(parts[1], key.getSubkey(16 - i));
-            parts[1] = SBoxes.encrypt(parts[1]);
-            parts[1] = Permutation.permute(parts[1]);
+            if (encrypt) parts[1] = Bits.xor(F(key.getSubkey(i + 1), parts[1]), parts[0]);
+            else parts[1] = Bits.xor(F(key.getSubkey(16 - i), parts[1]), parts[0]);
 
-            parts[1] = Bits.xor(parts[1], parts[0]);
-
-            //Swap
             parts[0] = rightOld;
         }
 
@@ -102,7 +94,25 @@ public class DES {
         System.arraycopy(parts[0], 0, retVal, 0, 32);
         System.arraycopy(parts[1], 0, retVal, 32, 32);
 
-        return Permutation.init_permute_inversed(retVal);
+        return Permutation.IP_Inversed(retVal);
+    }
+
+    /**
+     * The inner function F of the Feistel-Cipher
+     *
+     * @param subkey - Subkey from the corresponding round
+     * @param part   - The part that should be ciphered
+     * @return - The new array
+     */
+    private int[] F(int[] subkey, int[] part) {
+        int[] retVal;
+
+        retVal = Expansion.expand(part);
+        retVal = Bits.xor(retVal, subkey);
+        retVal = SBoxes.encrypt(retVal);
+        retVal = Permutation.P(retVal);
+
+        return retVal;
     }
 
     /**

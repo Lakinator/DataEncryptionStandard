@@ -36,6 +36,7 @@ public class Key {
     };
 
     private int currentRound, maxRound;
+    private int[] origin;
     private int[][] bits;
     private int[][] subkeys;
 
@@ -43,11 +44,9 @@ public class Key {
     public Key(final int[] key) throws IllegalArgumentException {
         if (!verifyKey(key)) return;
 
+        origin = key;
         maxRound = -1;
         currentRound = 0;
-
-        //Permutation
-        PC1(key);
     }
 
     /**
@@ -58,6 +57,9 @@ public class Key {
     public void generateSubkeys(int maxRound) {
         if (maxRound <= 0 || this.maxRound == maxRound) return;
 
+        PC1();
+
+        currentRound = 0;
         this.maxRound = maxRound;
         subkeys = new int[this.maxRound][48];
 
@@ -74,21 +76,23 @@ public class Key {
      */
     private int[] getNextKey() {
         currentRound++;
+
         for (int[] bit : bits) {
             circularLeftShift(bit, getShifts());
         }
+
         return PC2();
     }
 
     /**
      * This "Permuted-Choice" method divides the input bit array while also leaving out
      * the "Parity-Bits" every 8th bit.
+     * <p>
      * The result is stored in {@link Key#bits}.
+     * <p>
      * Uses {@link Key#permutedArray_PC1} which contains {@link Key#permutedLeft_PC1} and {@link Key#permutedRight_PC1}.
-     *
-     * @param input - The bit arry that will be permuted
      */
-    private void PC1(final int[] input) {
+    private void PC1() {
         //Init
         bits = new int[2][];
         for (int i = 0; i < bits.length; i++) bits[i] = new int[28];
@@ -96,7 +100,7 @@ public class Key {
         //Permuting
         for (int i = 0; i < bits.length; i++) {
             for (int j = 0; j < bits[i].length; j++) {
-                bits[i][j] = input[permutedArray_PC1[i][j] - 1];
+                bits[i][j] = origin[permutedArray_PC1[i][j] - 1];
             }
         }
     }
@@ -188,5 +192,14 @@ public class Key {
         if (round < 1 || round > maxRound)
             throw new IndexOutOfBoundsException("Subkey round " + round + " does not exist!");
         return subkeys[round - 1].clone();
+    }
+
+    /**
+     * Getter for {@link Key#origin}.
+     *
+     * @return A copy of {@link Key#origin}
+     */
+    public int[] getOrigin() {
+        return origin.clone();
     }
 }

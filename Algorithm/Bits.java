@@ -77,7 +77,8 @@ public class Bits {
     private static int[] finalizedArray(ArrayList<Integer> resultList, int minLen, boolean reverse) {
         int[] resultArray;
         while (resultList.size() < minLen) {
-            resultList.add(0);
+            if (reverse) resultList.add(0);
+            else resultList.add(0, 0);
         }
 
         if (reverse) Collections.reverse(resultList);

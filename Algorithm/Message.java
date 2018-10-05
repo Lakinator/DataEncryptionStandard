@@ -9,14 +9,24 @@ public class Message {
     private int[][] dataSplit;
     private int blockLength;
 
+    public Message(int[] data) {
+        this(data, 64);
+    }
+
+    public Message(int[] data, int blockLength) {
+        this.blockLength = blockLength;
+        this.data = data;
+        this.dataSplit = splitData();
+    }
+
     public Message(String msg) {
         this(msg, 64);
     }
 
     public Message(String msg, int blockLength) {
         this.blockLength = blockLength;
-        data = Bits.toBits(msg, this.blockLength);
-        dataSplit = splitData();
+        this.data = Bits.toBits(msg, this.blockLength);
+        this.dataSplit = splitData();
     }
 
     /**
@@ -37,7 +47,7 @@ public class Message {
             retVal = new int[blockCount][blockLength];
 
             for (int i = 0; i < blockCount; i++) {
-                System.arraycopy(data, i * blockLength, retVal[i], 0, Math.min(blockLength, data.length - (i * blockLength)));
+                System.arraycopy(data, i * blockLength, retVal[i], Math.max(0, blockLength - (data.length - (i * blockLength))), Math.min(blockLength, data.length - (i * blockLength)));
             }
         }
 

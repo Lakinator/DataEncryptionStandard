@@ -1,5 +1,7 @@
 package Algorithm;
 
+import java.math.BigInteger;
+
 /**
  * 30.09.2018 | created by Lukas S
  */
@@ -40,11 +42,14 @@ public class Key {
     private int[][] bits;
     private int[][] subkeys;
 
+    public Key(String hex) {
+        this(Bits.toBits(hex, 64));
+    }
 
     public Key(final int[] key) throws IllegalArgumentException {
         if (!verifyKey(key)) return;
 
-        origin = key;
+        origin = key.clone();
         maxRound = -1;
         currentRound = 0;
     }
@@ -77,16 +82,15 @@ public class Key {
     private int[] getNextKey() {
         currentRound++;
 
-        for (int[] bit : bits) {
+        for (int[] bit : bits)
             circularLeftShift(bit, getShifts());
-        }
 
         return PC2();
     }
 
     /**
-     * This "Permuted-Choice" method divides the input bit array while also leaving out
-     * the "Parity-Bits" every 8th bit.
+     * This "Permuted-Choice" method divides {@link Key#origin} into two parts
+     * while also leaving out the "Parity-Bits" every 8th bit.
      * <p>
      * The result is stored in {@link Key#bits}.
      * <p>
@@ -108,6 +112,7 @@ public class Key {
     /**
      * This "Permuted-Choice" method merges and cuts down the two
      * bit arrays in {@link Key#bits} to a 48 bit array.
+     * <p>
      * Uses {@link Key#permuted_PC2}.
      *
      * @return - The merged and cut down bit array
@@ -149,6 +154,7 @@ public class Key {
         for (int i = 0; i < n; i++) {
             System.arraycopy(bits, 1, bits, 0, bits.length - 1);
             bits[bits.length - 1] = temp;
+            temp = bits[0];
         }
     }
 
@@ -168,14 +174,14 @@ public class Key {
             int sum = 0;
 
             //Cross sum of 7 of 8 bits from one byte
-            for (int j = pos - 1; j > pos - 8; j--) {
+            for (int j = pos - 1; j > pos - 8; j--)
                 sum += key[j];
-            }
+
 
             //Check for parity bit
-            if (key[pos] != (sum + 1) % 2) {
+            if (key[pos] != (sum + 1) % 2)
                 throw new IllegalArgumentException(String.format("Wrong parity bit (%s) at array index %s (Byte %s) | Sum was %s | Expected parity bit is %s", key[pos], pos, i, sum, ((sum + 1) % 2)));
-            }
+
         }
 
         return true;

@@ -37,7 +37,7 @@ public class DES {
             System.arraycopy(temp, 0, encrypted, i * msg.getBlockLength(), temp.length);
         }
 
-        return new Message(Bits.toString(encrypted));
+        return new Message(encrypted);
     }
 
     /**
@@ -58,7 +58,7 @@ public class DES {
             System.arraycopy(temp, 0, decrypted, i * msg.getBlockLength(), temp.length);
         }
 
-        return new Message(Bits.toString(decrypted));
+        return new Message(decrypted);
     }
 
     /**
@@ -84,15 +84,19 @@ public class DES {
         for (int i = 0; i < 16; i++) {
             rightOld = parts[1];
 
-            if (encrypt) parts[1] = Bits.xor(F(key.getSubkey(i + 1), parts[1]), parts[0]);
-            else parts[1] = Bits.xor(F(key.getSubkey(16 - i), parts[1]), parts[0]);
+            if (encrypt)
+                parts[1] = F(key.getSubkey(i + 1), parts[1]);
+            else
+                parts[1] = F(key.getSubkey(16 - i), parts[1]);
+
+            parts[1] = Bits.xor(parts[1], parts[0]);
 
             parts[0] = rightOld;
         }
 
         retVal = new int[64];
-        System.arraycopy(parts[0], 0, retVal, 0, 32);
-        System.arraycopy(parts[1], 0, retVal, 32, 32);
+        System.arraycopy(parts[1], 0, retVal, 0, 32);
+        System.arraycopy(parts[0], 0, retVal, 32, 32);
 
         return Permutation.IP_Inversed(retVal);
     }

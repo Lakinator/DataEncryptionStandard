@@ -9,6 +9,14 @@ public class Message {
     private int[][] dataSplit;
     private int blockLength;
 
+    public Message(String hex) {
+        this(hex, 64);
+    }
+
+    public Message(String hex, int blockLength) {
+        this(Bits.toBits(hex, blockLength), blockLength);
+    }
+
     public Message(int[] data) {
         this(data, 64);
     }
@@ -16,16 +24,6 @@ public class Message {
     public Message(int[] data, int blockLength) {
         this.blockLength = blockLength;
         this.data = data;
-        this.dataSplit = splitData();
-    }
-
-    public Message(String msg) {
-        this(msg, 64);
-    }
-
-    public Message(String msg, int blockLength) {
-        this.blockLength = blockLength;
-        this.data = Bits.toBits(msg, this.blockLength);
         this.dataSplit = splitData();
     }
 
@@ -95,12 +93,12 @@ public class Message {
     }
 
     /**
-     * Transforms the {@link Message#data} into a string.
+     * Transforms the {@link Message#data} into a hexadecimal string.
      *
      * @return - The string
      */
     @Override
     public String toString() {
-        return Bits.toString(data);
+        return Bits.toHex(data);
     }
 }

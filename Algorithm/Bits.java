@@ -29,40 +29,22 @@ public class Bits {
     }
 
     /**
-     * Transforms a decimal into a bit array.
+     * Transforms a hexadecimal into a bit array.
      *
-     * @param hex    - Hex number that will be transformed
+     * @param hex    - Hexadecimal that will be transformed
      * @param minLen - The minimum length of the desired bit array, 0's are added to reach the minimum length
      * @return - The bit array
      */
-    public static int[] toBits(BigInteger hex, int minLen) {
+    public static int[] toBits(String hex, int minLen) {
         ArrayList<Integer> resultList = new ArrayList<>();
+        BigInteger temp = new BigInteger(hex, 16);
 
-        while (hex.compareTo(new BigInteger("0", 10)) > 0) {
-            resultList.add(hex.mod(new BigInteger("2", 10)).intValue());
-            hex = hex.divide(new BigInteger("2", 10));
+        while (temp.compareTo(new BigInteger("0", 10)) > 0) {
+            resultList.add(temp.mod(new BigInteger("2", 10)).intValue());
+            temp = temp.divide(new BigInteger("2", 10));
         }
 
         return finalizedArray(resultList, minLen, true);
-    }
-
-    /**
-     * Transforms a string into a bit array.
-     *
-     * @param str    - String that will be transformed
-     * @param minLen - The minimum length of the desired bit array, 0's are added to reach the minimum length
-     * @return - The bit array
-     */
-    public static int[] toBits(String str, int minLen) {
-        ArrayList<Integer> resultList = new ArrayList<>();
-
-        for (char c : str.toCharArray()) {
-            for (int i : toBits(c, 8)) {
-                resultList.add(i);
-            }
-        }
-
-        return finalizedArray(resultList, minLen, false);
     }
 
     /**
@@ -109,21 +91,70 @@ public class Bits {
     }
 
     /**
-     * Transforms a bit array into a string.
+     * Transforms a bit array into a <code>BigInteger</code>.
+     * <p>
+     * This is used for big bit arrays.
      *
      * @param bits - The bit array that will be transformed
-     * @return - The decimal
+     * @return - The <code>BigInteger</code>
+     * @throws IllegalArgumentException - Bit array may not contain any other values than 0 or 1
      */
-    public static String toString(final int[] bits) throws IllegalArgumentException {
-        if (bits.length % 8 != 0) throw new IllegalArgumentException("Invalid bit array!");
+    public static BigInteger toBigInt(final int[] bits) throws IllegalArgumentException {
+        BigInteger result = new BigInteger("0", 10);
+        for (int i = bits.length - 1; i >= 0; i--) {
+            if (bits[i] != 0 && bits[i] != 1)
+                throw new IllegalArgumentException("Bit array may not contain any other values than 0 or 1!");
+            BigInteger b1 = new BigInteger("2").pow((bits.length - 1) - i);
+            BigInteger b2 = new BigInteger("" + bits[i]).multiply(b1);
+            result = result.add(b2);
+        }
+        return result;
+    }
 
+    /**
+     * Transforms a bit array into a hexadecimal string.
+     *
+     * @param bits - The bit array that will be transformed
+     * @return - The String
+     */
+    public static String toHex(final int[] bits) {
+        return toBigInt(bits).toString(16).toUpperCase();
+    }
+
+    /**
+     * Transforms a string into a hexadecimal value.
+     *
+     * @param str - The string that will be transformed
+     * @return - The string as a hexadecimal value
+     */
+    public static String stringToHex(String str) {
+        ArrayList<Integer> resultList = new ArrayList<>();
+
+        for (char c : str.toCharArray()) {
+            for (int i : toBits(c, 8)) {
+                resultList.add(i);
+            }
+        }
+
+        return toHex(finalizedArray(resultList, 0, false));
+    }
+
+    /**
+     * Counterpart to {@link Bits#stringToHex(String)}.
+     *
+     * @param hex - The hexadecimal value that will be transformed
+     * @return - The hexadecimal value as a string
+     */
+    @Deprecated
+    public static String hexToString(String hex) {
         StringBuilder sb = new StringBuilder();
         int[] temp = new int[8];
+        int[] bits = Bits.toBits(hex, 8);
 
         for (int i = 0; i < bits.length / 8; i++) {
             System.arraycopy(bits, i * 8, temp, 0, 8);
             sb.append((char) toDecimal(temp));
-            //TODO Maybe remove this => Experimental: Every ASCII = 0 will be removed
+            //Maybe remove this => Experimental: Every ASCII = 0 will be removed
             if (sb.indexOf("" + (char) 0) > -1) sb.deleteCharAt(sb.indexOf("" + (char) 0));
         }
 

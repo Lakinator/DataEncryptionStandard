@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
 
-        Message msg = new Message(Bits.stringToHex("Hallo Welt!"));
+        Message msg = new Message(Bits.stringToHex("Hallo Welt, dies ist ein sehr langer Text der gleich verschlüsselt wird!"));
 
         System.out.println("Data: " + msg.toString());
         System.out.println(Arrays.toString(msg.getData()));

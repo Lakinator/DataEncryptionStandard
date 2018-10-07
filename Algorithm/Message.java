@@ -24,6 +24,7 @@ public class Message {
     public Message(int[] data, int blockLength) {
         this.blockLength = blockLength;
         this.data = data;
+        this.data = Bits.expand(data, this.blockLength * getBlockCount());
         this.dataSplit = splitData();
     }
 
@@ -39,8 +40,7 @@ public class Message {
             retVal = new int[1][blockLength];
             System.arraycopy(data, 0, retVal[0], 0, data.length);
         } else {
-            int blockCount = data.length / blockLength;
-            if (data.length % blockLength != 0) blockCount++;
+            int blockCount = getBlockCount();
 
             retVal = new int[blockCount][blockLength];
 
@@ -80,7 +80,9 @@ public class Message {
      * @return - Block count
      */
     public int getBlockCount() {
-        return this.dataSplit.length;
+        int blockCount = data.length / blockLength;
+        if (data.length % blockLength != 0) blockCount++;
+        return blockCount;
     }
 
     /**

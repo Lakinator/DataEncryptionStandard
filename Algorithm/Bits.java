@@ -162,6 +162,22 @@ public class Bits {
     }
 
     /**
+     * Expands a bit array by the given length by adding 0's.
+     *
+     * @param bits   - The bit array that will be expanded
+     * @param newLen - The new length
+     * @return - The expanded array
+     */
+    public static int[] expand(int[] bits, int newLen) {
+        if (newLen <= bits.length) return bits;
+
+        int[] temp = new int[newLen];
+
+        System.arraycopy(bits, 0, temp, newLen - bits.length, bits.length);
+        return temp;
+    }
+
+    /**
      * Merges two bit arrays into one by using the xor rules.
      *
      * @param bits      - The first bit array

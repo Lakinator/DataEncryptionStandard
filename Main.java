@@ -12,9 +12,11 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
 
-        Message msg = new Message(Bits.stringToHex("Hallo Welt!"));
+        String hex = Bits.stringToHex("Hello World!");
+        //hex = 48 65 6C 6C 6F 20 57 6F 72 6C 64 21
+        Message msg = new Message(hex);
 
-        System.out.println("Data: " + msg.toString());
+        System.out.println("Message { " + msg.toString() + " }");
         System.out.println(Arrays.toString(msg.getData()));
         for (int i = 0; i < msg.getBlockCount(); i++) {
             System.out.println(Arrays.toString(msg.getBlock(i)));
@@ -25,12 +27,16 @@ public class Main {
         //Encrypt
         DES des = new DES();
         Message enc = des.encrypt(msg, key);
-        System.out.println("Encoded: " + enc.toString());
-        System.out.println(Arrays.toString(enc.getData()));
+        System.out.println("Encoded { " + enc.toString() + " }");
+        for (int i = 0; i < enc.getBlockCount(); i++) {
+            System.out.println(Arrays.toString(enc.getBlock(i)));
+        }
 
         //Decrypt
         Message dec = des.decrypt(enc, key);
-        System.out.println("Decoded: " + dec.toString());
-        System.out.println(Arrays.toString(dec.getData()));
+        System.out.println("Decoded { " + dec.toString() + " }");
+        for (int i = 0; i < dec.getBlockCount(); i++) {
+            System.out.println(Arrays.toString(dec.getBlock(i)));
+        }
     }
 }

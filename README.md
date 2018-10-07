@@ -1,11 +1,11 @@
 # DataEncryptionStandard
 DES implementation in Java
 
-### TODO
+## TODO
 - Key generator
 - CBC implementation (currently, only EBC is implemented)
 
-### Description
+## Description
 - The message:
   ```java
   String hex = Bits.stringToHex("Hello World!");

@@ -95,12 +95,13 @@ public class Message {
     }
 
     /**
-     * Transforms the {@link Message#data} into a hexadecimal string.
+     * Transforms the {@link Message#data} into a hexadecimal string and an ASCII text.
      *
      * @return - The string
      */
     @Override
     public String toString() {
-        return Bits.toHex(data);
+        String hex = Bits.toHex(data);
+        return String.format("Hex: %s | Text: %s", hex, Bits.hexToString(hex));
     }
 }

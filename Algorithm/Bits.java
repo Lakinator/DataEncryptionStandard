@@ -37,7 +37,7 @@ public class Bits {
      */
     public static int[] toBits(String hex, int minLen) {
         ArrayList<Integer> resultList = new ArrayList<>();
-        BigInteger temp = new BigInteger(hex, 16);
+        BigInteger temp = new BigInteger(hex.replace(" ", "").trim(), 16);
 
         while (temp.compareTo(new BigInteger("0", 10)) > 0) {
             resultList.add(temp.mod(new BigInteger("2", 10)).intValue());
@@ -58,7 +58,7 @@ public class Bits {
      */
     private static int[] finalizedArray(ArrayList<Integer> resultList, int minLen, boolean reverse) {
         int[] resultArray;
-        while (resultList.size() < minLen) {
+        while (resultList.size() < minLen || (minLen <= 0 && resultList.size() % 8 != 0)) {
             if (reverse) resultList.add(0);
             else resultList.add(0, 0);
         }
@@ -145,16 +145,15 @@ public class Bits {
      * @param hex - The hexadecimal value that will be transformed
      * @return - The hexadecimal value as a string
      */
-    @Deprecated
     public static String hexToString(String hex) {
         StringBuilder sb = new StringBuilder();
         int[] temp = new int[8];
-        int[] bits = Bits.toBits(hex, 8);
+        int[] bits = Bits.toBits(hex, 0);
 
         for (int i = 0; i < bits.length / 8; i++) {
             System.arraycopy(bits, i * 8, temp, 0, 8);
             sb.append((char) toDecimal(temp));
-            //Maybe remove this => Experimental: Every ASCII = 0 will be removed
+            //TODO Maybe remove this => Experimental: Every ASCII = 0 will be removed
             if (sb.indexOf("" + (char) 0) > -1) sb.deleteCharAt(sb.indexOf("" + (char) 0));
         }
 

@@ -1,7 +1,5 @@
-import Algorithm.Bits;
-import Algorithm.DES;
-import Algorithm.Key;
-import Algorithm.Message;
+import Algorithm.*;
+import Observer.Observer;
 
 import java.util.Arrays;
 
@@ -12,8 +10,7 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
 
-        String hex = Bits.stringToHex("Hello World!");
-        //hex = 48 65 6C 6C 6F 20 57 6F 72 6C 64 21
+        String hex = Bits.stringToHex("HelloDES");
         Message msg = new Message(hex);
 
         System.out.println("Message { " + msg.toString() + " }");
@@ -24,19 +21,23 @@ public class Main {
 
         Key key = new Key("6D62B676B5F7B932");
 
+        //Observer
+        Observer observer = new Observer(msg);
+
         //Encrypt
         DES des = new DES();
-        Message enc = des.encrypt(msg, key);
+        Message enc = des.encrypt(msg, key, observer);
         System.out.println("Encoded { " + enc.toString() + " }");
         for (int i = 0; i < enc.getBlockCount(); i++) {
             System.out.println(Arrays.toString(enc.getBlock(i)));
         }
 
         //Decrypt
-        Message dec = des.decrypt(enc, key);
+        Message dec = des.decrypt(enc, key, null);
         System.out.println("Decoded { " + dec.toString() + " }");
         for (int i = 0; i < dec.getBlockCount(); i++) {
             System.out.println(Arrays.toString(dec.getBlock(i)));
         }
+
     }
 }

@@ -195,4 +195,17 @@ public class Bits {
 
         return retVal;
     }
+
+    public static String toString(int[] bits) {
+        StringBuilder stb = new StringBuilder();
+        stb.append("[");
+
+        for (int i = 0; i < bits.length; i++) {
+            stb.append(bits[i]);
+            if ((i + 1) % 8 == 0 && i != (bits.length - 1)) stb.append(" ");
+        }
+
+        stb.append("]");
+        return stb.toString();
+    }
 }

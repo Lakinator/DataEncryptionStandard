@@ -1,7 +1,5 @@
 package Algorithm;
 
-import java.math.BigInteger;
-
 /**
  * 30.09.2018 | created by Lukas S
  */

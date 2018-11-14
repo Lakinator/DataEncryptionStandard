@@ -23,6 +23,12 @@ DES implementation in Java
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0]
   [0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
   ```
+- The Observer:
+  > This object holds the entire information over one encryption or decryption. Just pass this object instead of `null` as the last parameter in `encrypt` or `decrypt`:
+  ```java
+  Observer observer = new Observer(msg);
+  ```
+  TODO: Complete description of the observer
 - The key:
   ```java
   Key key = new Key("6D62B676B5F7B932");
@@ -33,7 +39,7 @@ DES implementation in Java
   ```
 - Encryption
   ```java
-  Message enc = des.encrypt(msg, key);
+  Message enc = des.encrypt(msg, key, null);
   
   System.out.println("Encoded { " + enc.toString() + " }");
   for (int i = 0; i < enc.getBlockCount(); i++) {
@@ -48,7 +54,7 @@ DES implementation in Java
   ```
 - Decryption
   ```java
-  Message dec = des.decrypt(enc, key);
+  Message dec = des.decrypt(enc, key, null);
   
   System.out.println("Decoded { " + dec.toString() + " }");
   for (int i = 0; i < dec.getBlockCount(); i++) {

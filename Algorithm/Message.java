@@ -104,4 +104,22 @@ public class Message {
         String hex = Bits.toHex(data);
         return String.format("Hex: %s | Text: %s", hex, Bits.hexToString(hex));
     }
+
+    private String dataSplitAsString(String spaces) {
+        StringBuilder ret = new StringBuilder("dataSplit");
+
+        for (int i = 0; i < dataSplit.length; i++) {
+            ret.append("\n  ").append(spaces).append(i).append("  = ").append(Bits.toString(dataSplit[i]));
+        }
+
+        return ret.toString();
+    }
+
+    public String toString(String spaces) {
+        return String.format("%s  toString     = %s\n" +
+                             "%s  blockLength  = %s\n" +
+                             "%s  data         = %s\n" +
+                             "%s  %s",
+                spaces, toString(), spaces, blockLength, spaces, Bits.toString(data), spaces, dataSplitAsString(spaces + "  "));
+    }
 }

@@ -1,6 +1,9 @@
 import Algorithm.*;
 import Observer.Observer;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -28,6 +31,9 @@ public class Main {
         DES des = new DES();
         Message enc = des.encrypt(msg, key, observer);
         System.out.println("Encoded { " + enc.toString() + " }");
+
+        System.out.println(observer.toString()); //TESTING
+
         for (int i = 0; i < enc.getBlockCount(); i++) {
             System.out.println(Arrays.toString(enc.getBlock(i)));
         }

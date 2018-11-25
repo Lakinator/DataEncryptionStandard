@@ -206,4 +206,22 @@ public class Key {
     public int[] getOrigin() {
         return origin.clone();
     }
+
+    private String subkeysAsString(String spaces) {
+        StringBuilder ret = new StringBuilder("subkeys");
+
+        for (int i = 0; i < subkeys.length; i++) {
+            ret.append("\n  ").append(spaces).append(i).append("  = ").append(Bits.toString(subkeys[i]));
+        }
+
+        return ret.toString();
+    }
+
+    public String toString(String spaces) {
+        return String.format("key\n" +
+                             "%s  maxRound  = %s\n" +
+                             "%s  origin    = %s\n" +
+                             "%s  %s",
+                spaces, maxRound, spaces, Bits.toString(origin), spaces, subkeysAsString(spaces + "  "));
+    }
 }

@@ -1,5 +1,7 @@
 package Observer;
 
+import Algorithm.Bits;
+
 /**
  * 11.11.2018 | created by Lukas S
  */
@@ -33,5 +35,15 @@ public class FData {
 
     public int[] getPermutation() {
         return permutation;
+    }
+
+    public String toString(String spaces) {
+        return String.format("fData\n" +
+                             "%s  start        = %s\n" +
+                             "%s  expansion    = %s\n" +
+                             "%s  xor          = %s\n" +
+                             "%s  sboxes       = %s\n" +
+                             "%s  permutation  = %s",
+                spaces, Bits.toString(start), spaces, Bits.toString(expansion), spaces, Bits.toString(xor), spaces, Bits.toString(sboxes), spaces, Bits.toString(permutation));
     }
 }

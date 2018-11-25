@@ -1,5 +1,7 @@
 package Observer;
 
+import Algorithm.Bits;
+
 /**
  * 11.11.2018 | created by Lukas S
  */
@@ -63,5 +65,16 @@ public class Rounddata {
 
     public void setFData(int[] start, int[] expansion, int[] xor, int[] sboxes, int[] permutation) {
         this.fData = new FData(start, expansion, xor, sboxes, permutation);
+    }
+
+    public String toString(String spaces) {
+        return String.format("%s  round        = %s\n" +
+                             "%s  subkey       = %s\n" +
+                             "%s  partL_Start  = %s\n" +
+                             "%s  partR_Start  = %s\n" +
+                             "%s  partL_End    = %s\n" +
+                             "%s  partR_End    = %s\n" +
+                             "%s  %s",
+                spaces, round, spaces, Bits.toString(subkey), spaces, Bits.toString(partL_Start), spaces, Bits.toString(partR_Start), spaces, Bits.toString(partL_End), spaces, Bits.toString(partR_End), spaces, fData.toString(spaces + "  "));
     }
 }

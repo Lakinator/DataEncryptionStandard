@@ -1,5 +1,6 @@
 package Observer;
 
+import Algorithm.Bits;
 import Algorithm.Key;
 import Algorithm.Message;
 
@@ -62,5 +63,25 @@ public class Blockdata {
 
     public Rounddata[] getRounddata() {
         return rounddata;
+    }
+
+    private String rounddataAsString(String spaces) {
+        StringBuilder ret = new StringBuilder("rounddata");
+
+        for (int i = 0; i < rounddata.length; i++) {
+            ret.append("\n  ").append(spaces).append(i).append("\n").append(rounddata[i].toString(spaces + "  "));
+        }
+
+        return ret.toString();
+    }
+
+    public String toString(String spaces) {
+        return String.format("%s  blockindex  = %s\n" +
+                             "%s  msgStart\n%s\n" +
+                             "%s  %s\n" +
+                             "%s  IP          = %s\n" +
+                             "%s  IP_Inv      = %s\n" +
+                             "%s  %s",
+                spaces, blockIndex, spaces, msgStart.toString(spaces + "  "), spaces, key.toString(spaces + "  "), spaces, Bits.toString(IP), spaces, Bits.toString(IP_Inv), spaces, rounddataAsString(spaces + "  "));
     }
 }
